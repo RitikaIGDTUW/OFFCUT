@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Colour tokens stored as "R G B" so Tailwind can apply opacity (bg-ink/10). */
+@layer base {
+  :root {
+    --paper: 244 240 231;     /* #F4F0E7 warm ivory */
+    --paper-2: 217 222 213;   /* #D9DED5 sage grey */
+    --ink: 37 42 40;          /* #252A28 industrial charcoal */
+    --graphite: 88 95 91;     /* muted charcoal for secondary text */
+    --rule: 196 203 192;      /* sage grey, slightly deeper for hairlines */
+    --signal: 24 61 53;       /* #183D35 deep forest green (brand / primary) */
+    --signal-ink: 244 240 231;/* ivory text on green */
+    --moss: 24 61 53;         /* #183D35 */
+    --steel: 122 138 153;     /* #7A8A99 */
+    --oxide: 184 117 75;      /* #B8754B muted copper */
+    --copper: 184 117 75;
+    color-scheme: light;
+  }
+  .dark {
+    --paper: 26 30 28;        /* charcoal */
+    --paper-2: 37 42 40;      /* #252A28 */
+    --ink: 244 240 231;       /* #F4F0E7 */
+    --graphite: 176 182 172;
+    --rule: 62 69 65;
+    --signal: 217 222 213;    /* sage grey reads better than green on charcoal */
+    --signal-ink: 37 42 40;
+    --moss: 217 222 213;
+    color-scheme: dark;
+  }
+
+  :root { --font-mono: var(--font-sans); }
+  html { @apply bg-paper text-ink antialiased; }
+  body { @apply min-h-screen bg-paper font-sans text-ink; }
+  ::selection { @apply bg-signal text-signal-ink; }
+
+  :focus-visible { outline: 2px solid rgb(var(--signal)); outline-offset: 2px; }
+
+  h1, h2, h3 { @apply font-display font-normal tracking-tight; }
+}
+
+@layer components {
+  /* Uppercase monospace label used for specs, SKUs and prices */
+  .spec { @apply font-mono uppercase tracking-spec; }
+
+  /* Offset "stamp" hover used on cards and buttons — no soft shadows anywhere */
+  .stamp-hover {
+    @apply transition-[transform,box-shadow] duration-200 ease-out;
+  }
+  .stamp-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px -12px rgb(var(--ink) / 0.35);
+  }
+  /* Gentle image zoom inside hovered cards (the image box already clips overflow) */
+  .stamp-hover img { transition: transform 0.5s ease-out; }
+  .stamp-hover:hover img { transform: scale(1.04); }
+
+  /* Visible 12-column layout grid drawn with faint rule lines */
+  .grid-lines {
+    background-image: linear-gradient(to right, rgb(var(--rule) / 0.7) 1px, transparent 1px);
+    background-size: calc(100% / 12) 100%;
+  }
+
+  /* Barcode-style divider */
+  .barcode {
+    height: 14px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgb(var(--ink)) 0 1px, transparent 1px 3px,
+      rgb(var(--ink)) 3px 5px, transparent 5px 6px,
+      rgb(var(--ink)) 6px 7px, transparent 7px 10px
+    );
+  }
+
+  /* Registration-mark corners on hero images */
+  .reg-marks { position: relative; }
+  .reg-marks::before, .reg-marks::after {
+    content: ""; position: absolute; width: 18px; height: 18px; z-index: 2; pointer-events: none;
+    border-color: rgb(var(--ink));
+  }
+  .reg-marks::before { top: -8px; left: -8px; border-top: 1px solid; border-left: 1px solid; }
+  .reg-marks::after { bottom: -8px; right: -8px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  .container-x { @apply mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-10; }
+
+  .prose-offcut p { @apply mb-4 leading-relaxed; }
+  .prose-offcut ul { @apply mb-4 list-disc pl-5; }
+  .prose-offcut ol { @apply mb-4 list-decimal pl-5; }
+  .prose-offcut h2, .prose-offcut h3 { @apply mb-2 mt-6 text-2xl; }
+  .prose-offcut a { @apply underline decoration-signal underline-offset-4; }
+}
+
+/* Smooth colour transitions on links, buttons and nav; accent text on dark surfaces uses copper */
+@layer base {
+  a, button { transition-property: color, background-color, border-color, text-decoration-color, opacity, transform, box-shadow; transition-duration: 150ms; transition-timing-function: ease-out; }
+  footer .text-signal, .bg-ink .text-signal { color: rgb(var(--copper)); }
+  .dark footer .text-signal, .dark .bg-ink .text-signal { color: rgb(var(--signal)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .stamp-hover:hover, .stamp-hover:hover img { transform: none; }
+}
+
+/* Jotform chatbot launcher (the floating bubble lives in the page; the chat panel is Jotform-hosted) */
+[id^="JotformAgent-"] { font-family: var(--font-sans), system-ui, sans-serif; }
+[id^="JotformAgent-"] .ai-agent-chat-avatar {
+  background: linear-gradient(rgb(var(--signal)), rgb(var(--signal))) !important;
+  box-shadow: 0 0 0 2px rgb(var(--paper)), 0 0 0 3px rgb(var(--copper)), 0 8px 20px -8px rgb(var(--ink) / 0.45);
+}
+body.hide-chatbot [id^="JotformAgent-"] { display: none !important; }
