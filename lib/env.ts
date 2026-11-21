@@ -5,7 +5,7 @@
  */
 export const env = {
   MONGODB_URI: process.env.MONGODB_URI ?? "",
-  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  SITE_URL: process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID ?? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "",
   RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET ?? "",
   RAZORPAY_WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET ?? "",
